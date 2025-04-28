@@ -3,6 +3,7 @@ package com.arvind.companyms.impl;
 import com.arvind.companyms.Company;
 import com.arvind.companyms.CompanyRepository;
 import com.arvind.companyms.CompanyService;
+import com.arvind.companyms.dto.ReviewMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +48,10 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Company getCompany(Long companyId) {
         return companyRepository.findById(companyId).orElse(null);
+    }
+
+    @Override
+    public void updateCompanyRating(ReviewMessage reviewMessage) {
+        System.out.println(reviewMessage.getDescription());
     }
 }
