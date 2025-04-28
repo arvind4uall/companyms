@@ -3,7 +3,9 @@ package com.arvind.companyms.impl;
 import com.arvind.companyms.Company;
 import com.arvind.companyms.CompanyRepository;
 import com.arvind.companyms.CompanyService;
+import com.arvind.companyms.clients.ReviewClient;
 import com.arvind.companyms.dto.ReviewMessage;
+import jakarta.ws.rs.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.Optional;
 public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private ReviewClient reviewClient;
     @Override
     public List<Company> getCompanies() {
         return companyRepository.findAll();
@@ -53,5 +57,9 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void updateCompanyRating(ReviewMessage reviewMessage) {
         System.out.println(reviewMessage.getDescription());
+        Company company = companyRepository.findById(reviewMessage.getCompanyId()).orElseThrow(()-> new NotFoundException("Company not found!!"+reviewMessage.getCompanyId()));
+        double averageRating = reviewClient.getAverageRatingOfCompany(reviewMessage.getCompanyId());
+        company.setRating(averageRating);
+        companyRepository.save(company);
     }
 }
